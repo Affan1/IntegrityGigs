@@ -1,5 +1,5 @@
 ﻿
-using System.Windows.Input;
+using Carter.OpenApi;
 
 namespace Job.API.Jobs.CreateJobs
 {
@@ -15,6 +15,7 @@ namespace Job.API.Jobs.CreateJobs
         ExperienceLevel ExperienceLevel,
         ProjectSize ProjectSize,
         JobDuration Duration,
+        JobStatus Status,
         DateTime? Deadline,
         bool IsRemote,
         string? Location
@@ -25,7 +26,7 @@ namespace Job.API.Jobs.CreateJobs
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {
-            app.MapPost("/jobs", async (CreateJobRequest request, ISender sender) =>
+            app.MapPost("v1/jobs", async (CreateJobRequest request, ISender sender) =>
             {
                 var command = request.Adapt<CreateJobCommand>();
 
@@ -40,7 +41,8 @@ namespace Job.API.Jobs.CreateJobs
                 .WithDescription("Creates a new job posting.")
                 .Produces<CreateJobResponse>(StatusCodes.Status201Created)
                 .ProducesProblem(StatusCodes.Status400BadRequest)
-                .WithSummary("Create a new job posting");
+                .WithSummary("Create a new job posting")
+                .IncludeInOpenApi();
         }
     }
 }
